@@ -23,7 +23,7 @@ import { IonPage, IonContent, onIonViewWillEnter } from '@ionic/vue'
 import { defineComponent, ref } from 'vue'
 import { useStore, ACTIONS, Tag, MediaObject, TagContributor, MediaMetadata, MediaFileType} from '../store'
 import PageHeader from '@/components/PageHeader.vue'
-import dbData from '@/mock/meta-data.json'
+// import dbData from '@/mock/meta-data.json'
 
 export default defineComponent ({
   components: {
@@ -65,7 +65,7 @@ export default defineComponent ({
           type: MediaFileType.IMAGE
         })
       }
-
+      console.log('fakeMediaObjects', fakeMediaObjects)
       // insert into db
       await store.dispatch(ACTIONS.INSERT_MEDIA_OBJECTS, fakeMediaObjects)
 
