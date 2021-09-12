@@ -157,7 +157,12 @@ const actions: ActionTree<State, any> = {
       console.log('DB:', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED SET_DB_ITEM Close', err)
+        }
       }
     }
     return successful
@@ -186,7 +191,12 @@ const actions: ActionTree<State, any> = {
       console.log('DB:', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          result = false;
+          console.log('DB: FAILED GET_DB_ITEM Close', err)
+        }
       }
     }
     return result
@@ -218,7 +228,12 @@ const actions: ActionTree<State, any> = {
       console.log('DB: FAILED CLEAR', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED CLEAR_DB_TABLE Close', err)
+        }
       }
     }
     return successful
@@ -247,10 +262,15 @@ const actions: ActionTree<State, any> = {
       console.log('DB: SUCCESS INSERT DATA')
       successful = true
     } catch (err) {
-      console.log('DB: FAILED INSERT', err)
+      console.log('DB: FAILED INSERT_DUMMY_TAGs', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED SELECT_DUMMY_TAGS Close', err)
+        }
       }
     }
     return successful
@@ -278,10 +298,15 @@ const actions: ActionTree<State, any> = {
       }
       successful = true
     } catch (err) {
-      console.log('DB: FAILED INSERT', err)
+      console.log('DB: FAILED INSERT TAG', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED INSERT TAG Close', err)
+        }
       }
     }
     return successful
@@ -298,14 +323,19 @@ const actions: ActionTree<State, any> = {
     try {
       await sqlStore.openStore(options)
       const tagResults = await sqlStore.keysvalues()
-      console.log('DB: keys', tagResults.keysvalues)
+      console.log('SELECT_ALL_TAGS DB: keys', tagResults.keysvalues)
       store.commit(MUTATIONS.INIT_TAGS, tagResults.keysvalues)
       successful = true
     } catch (err) {
       console.log('DB: FAILED SELECT_ALL_TAGS', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED SELECT_ALL_TAGS Close', err)
+        }
       }
     }
     return successful
@@ -335,15 +365,15 @@ const actions: ActionTree<State, any> = {
       // const mediaObjectsToAdd: MediaObject[] = []
       // loop over our media objects and check if they are in the db
       await mediaObjects.map(async (media) => {
-        const keyTest = await sqlStore.iskey({ key: media.name })
+//        const keyTest = await sqlStore.iskey({ key: media.name })
         
         // // if not found in db, then add them
-        if(keyTest.result) {
-          console.log('DB: KEY EXISTS', media.name)
-        } else {
+//        if(keyTest.result) {
+//          console.log('DB: KEY EXISTS', media.name)
+//        } else {
           console.log('DB: SUCCESS INSERTING MEDIA', media)
           await sqlStore.set({ key: media.name, value: JSON.stringify(media) }) 
-        }
+//        }
 
         // if media object not in state then add to list to add later
         // if(!store.state.mediaObjects.find((m) => m.name == media.name)) {
@@ -358,7 +388,12 @@ const actions: ActionTree<State, any> = {
       console.log('DB: FAILED INSERT', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED INSERT_MEDIA_OBJECTS Close', err)
+        }
       }
     }
     return successful
@@ -387,7 +422,12 @@ const actions: ActionTree<State, any> = {
       console.log(err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED UPDATE_MEDIA_OBJECT Close', err)
+        }
       }
     }
     return successful
@@ -425,7 +465,12 @@ const actions: ActionTree<State, any> = {
       console.log(err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          result = undefined;
+          console.log('DB: FAILED GET_MEDIA Close', err)
+        }
       }
     }
     return result
@@ -442,13 +487,18 @@ const actions: ActionTree<State, any> = {
     try {
       await sqlStore.openStore(options)
       const mediaResults = await sqlStore.keysvalues()
-      console.log('DB: keys', mediaResults.keysvalues)
+      console.log('SELECT_ALL_MEDIA DB: keys', mediaResults.keysvalues)
       result = mediaResults
     } catch (err) {
       console.log('DB ERROR SELECT_ALL_MEDIA', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          result = undefined;
+          console.log('DB: FAILED SELECT_ALL_MEDIA Close', err)
+        }
       }
     }
     return result
@@ -486,7 +536,12 @@ const actions: ActionTree<State, any> = {
       console.log('DB: FAILED INSERT', err)
     } finally {
       if(Capacitor.getPlatform() != 'web') {
-        await sqlStore.closeStore({database: dbName})
+        try {
+          await sqlStore.closeStore({database: dbName})
+        } catch (err) {
+          successful = false;
+          console.log('DB: FAILED INSERT_METADATA Close', err)
+        }
       }
     }
     return successful

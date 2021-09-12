@@ -37,7 +37,10 @@ export default defineComponent ({
     const mediaObjects = ref([] as MediaObject[])
 
     onIonViewWillEnter(async () => {
+      console.log("$$$ in TestView onIonViewWillEnter")
+      console.log("$$$ TestView onIonViewWillEnter going to dispatch SELECT_ALL_TAGS")
       tags.value = await store.dispatch(ACTIONS.SELECT_ALL_TAGS)
+      console.log(`$$$ tags.value ${tags.value}`)
       const dbMediaObjects = await store.dispatch(ACTIONS.SELECT_ALL_MEDIA)
 
       const fakeMediaObjects = [] as MediaObject[]

@@ -61,16 +61,19 @@ export default defineComponent({
     const router = useRouter()
 
     const clearDB = async () => {
+      console.log("in clearDB")
       await store.dispatch(ACTIONS.CLEAR_DB_TABLE, { table: TABLES.TAGS })
       await store.dispatch(ACTIONS.CLEAR_DB_TABLE, { table: TABLES.MEDIA })
       await store.dispatch(ACTIONS.CLEAR_DB_TABLE, { table: TABLES.METADATA })
     }
 
     const insertDummyTags = async () => {
+      console.log("in insertDummyTags")
       await store.dispatch(ACTIONS.INSERT_DUMMY_TAGS)
     }
 
     const insertMetadata = async() => {
+      console.log("in insertMetadata")
       console.log('dbData', dbData)
       // insert into db
       const metaDataRows = [] as MediaMetadata[]
@@ -87,7 +90,8 @@ export default defineComponent({
     }
     
     onMounted(async () => {
-      await store.dispatch(ACTIONS.SELECT_ALL_TAGS)
+//      console.log("$$$ onMounted going to dispatch SELECT_ALL_TAGS")
+//      await store.dispatch(ACTIONS.SELECT_ALL_TAGS)
     })
 
     return {
