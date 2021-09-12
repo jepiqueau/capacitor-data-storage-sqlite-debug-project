@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { IonApp, IonRouterOutlet, IonContent, IonHeader, IonTitle, IonToolbar, IonListHeader, IonItem, IonMenuToggle, IonList, IonMenu, IonButton, IonLabel, menuController, onIonViewWillEnter } from '@ionic/vue'
-import { defineComponent, inject, computed, watch, ref, onMounted } from 'vue';
+import { defineComponent, inject, computed, watch, ref, onMounted, getCurrentInstance } from 'vue';
 import { useStore, MUTATIONS, ACTIONS, TABLES, Tag, MediaMetadata} from './store'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -57,7 +57,9 @@ export default defineComponent({
   },
   setup(props, context) {
     useI18n()
-    const store = useStore()
+    const app = getCurrentInstance();
+    const store = app?.appContext.config.globalProperties.$uStore;
+//    const store = useStore()
     const router = useRouter()
 
     const clearDB = async () => {

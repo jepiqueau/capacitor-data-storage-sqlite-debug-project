@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { IonPage, IonContent, onIonViewWillEnter } from '@ionic/vue'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, getCurrentInstance } from 'vue'
 import { useStore, ACTIONS, Tag, MediaObject, TagContributor, MediaMetadata, MediaFileType} from '../store'
 import PageHeader from '@/components/PageHeader.vue'
 // import dbData from '@/mock/meta-data.json'
@@ -32,20 +32,22 @@ export default defineComponent ({
     IonContent,
   },
   setup() {
+    const app = getCurrentInstance();
+    const tags = app?.appContext.config.globalProperties.$tags;
     const store = useStore()
-    const tags = ref([] as Tag[])
+//    const tags = ref([] as Tag[])
     const mediaObjects = ref([] as MediaObject[])
 
     onIonViewWillEnter(async () => {
       console.log("$$$ in TestView onIonViewWillEnter")
       console.log("$$$ TestView onIonViewWillEnter going to dispatch SELECT_ALL_TAGS")
-      tags.value = await store.dispatch(ACTIONS.SELECT_ALL_TAGS)
-      console.log(`$$$ tags.value ${tags.value}`)
+//      tags.value = await store.dispatch(ACTIONS.SELECT_ALL_TAGS)
+//      console.log(`$$$ tags.value ${tags.value}`)
       const dbMediaObjects = await store.dispatch(ACTIONS.SELECT_ALL_MEDIA)
 
       const fakeMediaObjects = [] as MediaObject[]
 
-      for(let i = 0; i < 500; i++) {
+      for(let i = 0; i < 1000; i++) {
         const n = Math.random().toString(16).substr(2, 8) + '.jpg'
         const place = Math.random().toString(16).substr(2, 8)
         const comment = Math.random().toString(16).substr(2, 8)

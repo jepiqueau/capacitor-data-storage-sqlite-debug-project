@@ -1,8 +1,9 @@
-import { createApp } from 'vue'
+import { createApp, ref,  } from 'vue'
 import App from './App.vue'
 import router from './router';
-import { store, key } from './store'
+import { store, key, Tag, ACTIONS } from './store'
 import { IonicVue } from '@ionic/vue';
+import { CapacitorDataStorageSqlite, capOpenStorageOptions} from "capacitor-data-storage-sqlite";
 
 import Vue3TouchEvents from "vue3-touch-events";
 
@@ -35,6 +36,7 @@ import './theme/variables.css';
 import 'vue-ionicons/ionicons.scss'
 
 
+const tags = ref([] as Tag[]);
 const app = createApp(App).use(store, key)
   .use(IonicVue)
   .use(router)
@@ -43,7 +45,12 @@ const app = createApp(App).use(store, key)
 
 app.provide('emitter', emitter)
 // app.provide('i18n', i18n)
-  
+
 router.isReady().then(() => {
-  app.mount('#app');
+  store.dispatch(ACTIONS.SELECT_ALL_TAGS).then((res) => {
+    console.log(`$$$$$ res ${JSON.stringify(res)}`)
+    tags.value = res;
+    app.config.globalProperties.$tags = tags;
+    app.mount('#app');
+  })
 });
